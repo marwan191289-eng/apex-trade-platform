@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
-import { executeTrade, getPortfolio } from "@/lib/trading.functions";
+import { executeTrade } from "@/lib/trading.functions";
 import { useI18n } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth-context";
 import { fmtPrice } from "@/lib/format";
@@ -18,6 +18,11 @@ export function TradePanel({ symbol, price }: { symbol: string; price: number })
   const qc = useQueryClient();
   const trade = useServerFn(executeTrade);
 
+  // Portfolio query only when logged in
+  const portfolio = useQuery({ ...portfolioQuery, enabled: !!user });
+  const holding = portfolio.data?.holdings.find((h) => h.symbol === symbol.toUpperCase());
+  const balance = portfolio.data?.balance ?? 0;
+
   const m = useMutation({
     mutationFn: trade,
     onSuccess: () => {
@@ -28,16 +33,22 @@ export function TradePanel({ symbol, price }: { symbol: string; price: number })
     onError: (e: Error) => toast.error(e.message),
   });
 
-  // get portfolio for available balance (only when logged in)
-  const portfolio = user ? <PortfolioBalance symbol={symbol} /> : null;
-
   const numAmount = parseFloat(amount) || 0;
   const numPrice = parseFloat(limitPrice) || price;
   const total = numAmount * numPrice;
 
+  const setPct = (pct: number) => {
+    if (side === "buy") {
+      const usable = (balance * pct) / 100;
+      setAmount((usable / numPrice).toFixed(6));
+    } else {
+      const have = holding?.amount ?? 0;
+      setAmount(((have * pct) / 100).toFixed(6));
+    }
+  };
+
   const onSubmit = () => {
-    if (!user) return;
-    if (numAmount <= 0) return;
+    if (!user || numAmount <= 0) return;
     m.mutate({ data: { symbol: symbol.toUpperCase(), side, amount: numAmount, price: numPrice } });
   };
 
@@ -89,7 +100,15 @@ export function TradePanel({ symbol, price }: { symbol: string; price: number })
 
         <div className="flex gap-1">
           {[25, 50, 75, 100].map((p) => (
-            <PctButton key={p} pct={p} side={side} price={numPrice} symbol={symbol} setAmount={setAmount} />
+            <button
+              key={p}
+              type="button"
+              onClick={() => setPct(p)}
+              disabled={!user}
+              className="flex-1 bg-bg-main text-[10px] py-1.5 rounded hover:bg-bg-elevated transition-colors text-muted-foreground disabled:opacity-40"
+            >
+              {p}%
+            </button>
           ))}
         </div>
 
@@ -98,7 +117,15 @@ export function TradePanel({ symbol, price }: { symbol: string; price: number })
           <span className="font-mono">${fmtPrice(total)}</span>
         </div>
 
-        {portfolio}
+        {user && (
+          <div className="flex justify-between text-[11px] text-muted-foreground pt-2 border-t border-white/5">
+            <span>{t("trade.available")}</span>
+            <div className="text-right font-mono">
+              <div>${fmtPrice(balance)} USDT</div>
+              {holding && <div>{holding.amount.toFixed(6)} {symbol}</div>}
+            </div>
+          </div>
+        )}
 
         {user ? (
           <button
@@ -118,41 +145,6 @@ export function TradePanel({ symbol, price }: { symbol: string; price: number })
             {t("trade.signin_to_trade")}
           </Link>
         )}
-      </div>
-    </div>
-  );
-}
-
-function PctButton({ pct, side, price, symbol, setAmount }: { pct: number; side: "buy" | "sell"; price: number; symbol: string; setAmount: (s: string) => void }) {
-  const { user } = useAuth();
-  const onClick = async () => {
-    if (!user) return;
-    // simplest: fetch portfolio inline
-    const res = await fetch("/api/_portfolio_helper").catch(() => null);
-    // fallback — leave value alone
-    return res;
-  };
-  return (
-    <button
-      onClick={onClick}
-      type="button"
-      className="flex-1 bg-bg-main text-[10px] py-1.5 rounded hover:bg-bg-elevated transition-colors text-muted-foreground"
-    >
-      {pct}%
-    </button>
-  );
-}
-
-function PortfolioBalance({ symbol }: { symbol: string }) {
-  const { data } = useSuspenseQuery(portfolioQuery);
-  const { t } = useI18n();
-  const holding = data.holdings.find((h) => h.symbol === symbol.toUpperCase());
-  return (
-    <div className="flex justify-between text-[11px] text-muted-foreground pt-2 border-t border-white/5">
-      <span>{t("trade.available")}</span>
-      <div className="text-right font-mono">
-        <div>${fmtPrice(data.balance)} USDT</div>
-        {holding && <div>{holding.amount.toFixed(6)} {symbol}</div>}
       </div>
     </div>
   );
