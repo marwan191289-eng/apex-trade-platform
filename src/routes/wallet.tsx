@@ -1,5 +1,5 @@
-import { createFileRoute, Link, redirect } from "@tanstack/react-router";
-import { Suspense } from "react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { Suspense, useEffect } from "react";
 import { useQuery, useQueries } from "@tanstack/react-query";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -9,8 +9,6 @@ import { coinDetailQuery, symbolToId } from "@/lib/coingecko";
 import { fmtPrice, fmtUsd, fmtPct } from "@/lib/format";
 import { useAuth } from "@/lib/auth-context";
 import { useI18n } from "@/lib/i18n";
-import { useEffect } from "react";
-import { useNavigate } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/wallet")({
   head: () => ({ meta: [{ title: "Wallet — Nexus" }] }),
