@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Suspense } from "react";
+import { Suspense, useMemo, useState } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -7,6 +7,7 @@ import { TickerBar, TickerBarFallback } from "@/components/TickerBar";
 import { MarketsTable } from "@/components/MarketsTable";
 import { marketsQuery } from "@/lib/coingecko";
 import { useI18n } from "@/lib/i18n";
+
 
 export const Route = createFileRoute("/markets")({
   head: () => ({
