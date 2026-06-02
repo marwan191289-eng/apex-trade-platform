@@ -20,12 +20,25 @@ export function Header() {
               {t("nav.markets")}
             </Link>
             <Link to="/trade/$symbol" params={{ symbol: "BTC" }} className="hover:text-foreground transition-colors [&.active]:text-foreground [&.active]:border-b-2 [&.active]:border-accent py-5">
-              {t("nav.trade")}
+              Spot
+            </Link>
+            <Link to="/futures" className="hover:text-foreground transition-colors [&.active]:text-foreground [&.active]:border-b-2 [&.active]:border-accent py-5">
+              Futures
+            </Link>
+            <Link to="/bots" className="hover:text-foreground transition-colors [&.active]:text-foreground [&.active]:border-b-2 [&.active]:border-accent py-5">
+              Bots
+            </Link>
+            <Link to="/copy" className="hover:text-foreground transition-colors [&.active]:text-foreground [&.active]:border-b-2 [&.active]:border-accent py-5">
+              Copy
+            </Link>
+            <Link to="/earn" className="hover:text-foreground transition-colors [&.active]:text-foreground [&.active]:border-b-2 [&.active]:border-accent py-5">
+              Earn
             </Link>
             <Link to="/wallet" className="hover:text-foreground transition-colors [&.active]:text-foreground [&.active]:border-b-2 [&.active]:border-accent py-5">
               {t("nav.wallet")}
             </Link>
           </div>
+
         </div>
         <div className="flex items-center gap-3">
           <button
