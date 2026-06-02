@@ -4,6 +4,8 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 import { useI18n } from "@/lib/i18n";
+import { SocialAuthButtons } from "@/components/SocialAuthButtons";
+
 
 export const Route = createFileRoute("/login")({
   head: () => ({ meta: [{ title: "Sign In — Nexus" }] }),
@@ -37,6 +39,12 @@ function LoginPage() {
         <div className="bg-bg-card border border-white/5 rounded-xl p-8">
           <h1 className="text-2xl font-bold mb-1">{t("auth.login.title")}</h1>
           <p className="text-sm text-muted-foreground mb-6">{t("auth.login.subtitle")}</p>
+          <SocialAuthButtons />
+          <div className="flex items-center gap-3 my-5">
+            <div className="h-px flex-1 bg-white/10" />
+            <span className="text-[10px] text-muted-foreground uppercase tracking-wider">or email</span>
+            <div className="h-px flex-1 bg-white/10" />
+          </div>
           <form onSubmit={submit} className="space-y-4" dir="ltr">
             <div>
               <label className="text-xs text-muted-foreground uppercase tracking-wider block mb-1.5">{t("auth.email")}</label>
@@ -53,6 +61,7 @@ function LoginPage() {
               {loading ? t("common.loading") : t("auth.submit.login")}
             </button>
           </form>
+
           <p className="text-center text-sm text-muted-foreground mt-6">
             {t("auth.switch.tosignup")} <Link to="/signup" className="text-accent font-semibold hover:underline">{t("auth.signup_link")}</Link>
           </p>
