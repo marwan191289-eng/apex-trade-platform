@@ -44,7 +44,14 @@ function SignupPage() {
         <div className="bg-bg-card border border-white/5 rounded-xl p-8">
           <h1 className="text-2xl font-bold mb-1">{t("auth.signup.title")}</h1>
           <p className="text-sm text-muted-foreground mb-6">{t("auth.signup.subtitle")}</p>
+          <SocialAuthButtons />
+          <div className="flex items-center gap-3 my-5">
+            <div className="h-px flex-1 bg-white/10" />
+            <span className="text-[10px] text-muted-foreground uppercase tracking-wider">or email</span>
+            <div className="h-px flex-1 bg-white/10" />
+          </div>
           <form onSubmit={submit} className="space-y-4">
+
             <div>
               <label className="text-xs text-muted-foreground uppercase tracking-wider block mb-1.5">{t("auth.name")}</label>
               <input type="text" required value={name} onChange={(e) => setName(e.target.value)}
