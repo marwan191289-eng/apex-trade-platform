@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Suspense } from "react";
+import { Suspense, useMemo, useState } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -7,6 +7,7 @@ import { TickerBar, TickerBarFallback } from "@/components/TickerBar";
 import { MarketsTable } from "@/components/MarketsTable";
 import { marketsQuery } from "@/lib/coingecko";
 import { useI18n } from "@/lib/i18n";
+
 
 export const Route = createFileRoute("/markets")({
   head: () => ({
@@ -41,13 +42,33 @@ function MarketsPage() {
 function Content() {
   const { t } = useI18n();
   const { data } = useSuspenseQuery(marketsQuery);
+  const [q, setQ] = useState("");
+  const filtered = useMemo(() => {
+    const s = q.trim().toLowerCase();
+    if (!s) return data;
+    return data.filter(
+      (c) => c.name.toLowerCase().includes(s) || c.symbol.toLowerCase().includes(s)
+    );
+  }, [data, q]);
   return (
     <>
-      <div className="mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold mb-2">{t("markets.title")}</h1>
-        <p className="text-muted-foreground">{t("markets.subtitle")}</p>
+      <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">{t("markets.title")}</h1>
+          <p className="text-muted-foreground">
+            {filtered.length} / {data.length} assets
+          </p>
+        </div>
+        <input
+          type="search"
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          placeholder="Search name or symbol…"
+          className="bg-bg-card border border-white/10 rounded-md px-3 py-2 text-sm w-full md:w-80 focus:outline-none focus:border-accent"
+        />
       </div>
-      <MarketsTable coins={data} />
+      <MarketsTable coins={filtered} />
     </>
   );
 }
+

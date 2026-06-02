@@ -15,37 +15,51 @@ export interface MarketCoin {
   sparkline_in_7d?: { price: number[] };
 }
 
-export const TOP_COINS = [
-  "bitcoin","ethereum","tether","binancecoin","solana","ripple","usd-coin",
-  "cardano","dogecoin","tron","avalanche-2","chainlink","polkadot","matic-network",
-  "shiba-inu","litecoin","uniswap","cosmos","stellar","monero",
-];
-
-export function symbolToId(symbol: string): string {
-  const map: Record<string, string> = {
-    btc: "bitcoin", eth: "ethereum", usdt: "tether", bnb: "binancecoin",
-    sol: "solana", xrp: "ripple", usdc: "usd-coin", ada: "cardano",
-    doge: "dogecoin", trx: "tron", avax: "avalanche-2", link: "chainlink",
-    dot: "polkadot", matic: "matic-network", shib: "shiba-inu",
-    ltc: "litecoin", uni: "uniswap", atom: "cosmos", xlm: "stellar", xmr: "monero",
-  };
-  return map[symbol.toLowerCase()] ?? symbol.toLowerCase();
-}
-
 async function fetchJson<T>(url: string): Promise<T> {
   const res = await fetch(url, { headers: { accept: "application/json" } });
   if (!res.ok) throw new Error(`CoinGecko ${res.status}`);
   return res.json() as Promise<T>;
 }
 
+// Fetch top 250 coins by market cap — covers virtually every asset listed on
+// major centralized exchanges (Binance, Bybit, OKX, etc).
+async function fetchAllMarkets(): Promise<MarketCoin[]> {
+  const [p1, p2] = await Promise.all([
+    fetchJson<MarketCoin[]>(
+      `${BASE}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=true&price_change_percentage=24h`
+    ),
+    fetchJson<MarketCoin[]>(
+      `${BASE}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=2&sparkline=true&price_change_percentage=24h`
+    ).catch(() => [] as MarketCoin[]),
+  ]);
+  return [...p1, ...p2];
+}
+
 export const marketsQuery = queryOptions({
-  queryKey: ["markets", "top"],
-  queryFn: () => fetchJson<MarketCoin[]>(
-    `${BASE}/coins/markets?vs_currency=usd&ids=${TOP_COINS.join(",")}&order=market_cap_desc&per_page=50&page=1&sparkline=true&price_change_percentage=24h`
-  ),
+  queryKey: ["markets", "all"],
+  queryFn: fetchAllMarkets,
   staleTime: 60_000,
   refetchInterval: 60_000,
 });
+
+// Resolve a ticker symbol (e.g. "BTC") to a CoinGecko id by looking it up in
+// the cached markets list. Falls back to a small static map, then lowercased symbol.
+const FALLBACK_MAP: Record<string, string> = {
+  btc: "bitcoin", eth: "ethereum", usdt: "tether", bnb: "binancecoin",
+  sol: "solana", xrp: "ripple", usdc: "usd-coin", ada: "cardano",
+  doge: "dogecoin", trx: "tron", avax: "avalanche-2", link: "chainlink",
+  dot: "polkadot", matic: "matic-network", shib: "shiba-inu",
+  ltc: "litecoin", uni: "uniswap", atom: "cosmos", xlm: "stellar", xmr: "monero",
+};
+
+export function symbolToId(symbol: string, coins?: MarketCoin[]): string {
+  const s = symbol.toLowerCase();
+  if (coins) {
+    const found = coins.find((c) => c.symbol.toLowerCase() === s);
+    if (found) return found.id;
+  }
+  return FALLBACK_MAP[s] ?? s;
+}
 
 export const coinDetailQuery = (id: string) => queryOptions({
   queryKey: ["coin", id],

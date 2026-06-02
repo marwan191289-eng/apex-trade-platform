@@ -7,7 +7,7 @@ import { TickerBar, TickerBarFallback } from "@/components/TickerBar";
 import { OrderBook } from "@/components/OrderBook";
 import { TradePanel } from "@/components/TradePanel";
 import { CandlestickChart } from "@/components/CandlestickChart";
-import { coinDetailQuery, ohlcQuery, symbolToId } from "@/lib/coingecko";
+import { coinDetailQuery, marketsQuery, ohlcQuery, symbolToId } from "@/lib/coingecko";
 import { fmtPrice, fmtPct, fmtCompact } from "@/lib/format";
 
 export const Route = createFileRoute("/trade/$symbol")({
@@ -17,8 +17,9 @@ export const Route = createFileRoute("/trade/$symbol")({
       { name: "description", content: `Trade ${params.symbol.toUpperCase()} with live price chart, order book and instant execution.` },
     ],
   }),
-  loader: ({ context, params }) => {
-    const id = symbolToId(params.symbol);
+  loader: async ({ context, params }) => {
+    const coins = await context.queryClient.ensureQueryData(marketsQuery);
+    const id = symbolToId(params.symbol, coins);
     context.queryClient.ensureQueryData(coinDetailQuery(id));
     context.queryClient.ensureQueryData(ohlcQuery(id, 1));
   },
@@ -26,6 +27,7 @@ export const Route = createFileRoute("/trade/$symbol")({
   notFoundComponent: () => <div className="p-8">Not found</div>,
   component: TradePage,
 });
+
 
 function TradePage() {
   return (
@@ -42,9 +44,11 @@ function TradePage() {
 
 function Content() {
   const { symbol } = Route.useParams();
-  const id = symbolToId(symbol);
+  const { data: coins } = useSuspenseQuery(marketsQuery);
+  const id = symbolToId(symbol, coins);
   const { data: coin } = useSuspenseQuery(coinDetailQuery(id));
   const { data: ohlc } = useSuspenseQuery(ohlcQuery(id, 1));
+
 
   if (!coin) return <div className="p-8">Asset not found.</div>;
 
