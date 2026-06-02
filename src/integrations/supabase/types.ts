@@ -14,6 +14,182 @@ export type Database = {
   }
   public: {
     Tables: {
+      bots: {
+        Row: {
+          bot_type: string
+          config: Json
+          created_at: string
+          id: string
+          investment_usdt: number
+          status: string
+          stopped_at: string | null
+          symbol: string
+          total_pnl: number
+          total_trades: number
+          user_id: string
+        }
+        Insert: {
+          bot_type: string
+          config?: Json
+          created_at?: string
+          id?: string
+          investment_usdt: number
+          status?: string
+          stopped_at?: string | null
+          symbol: string
+          total_pnl?: number
+          total_trades?: number
+          user_id: string
+        }
+        Update: {
+          bot_type?: string
+          config?: Json
+          created_at?: string
+          id?: string
+          investment_usdt?: number
+          status?: string
+          stopped_at?: string | null
+          symbol?: string
+          total_pnl?: number
+          total_trades?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      copy_follows: {
+        Row: {
+          allocation_usdt: number
+          current_pnl: number
+          id: string
+          leader_id: string
+          started_at: string
+          status: string
+          stopped_at: string | null
+          user_id: string
+        }
+        Insert: {
+          allocation_usdt: number
+          current_pnl?: number
+          id?: string
+          leader_id: string
+          started_at?: string
+          status?: string
+          stopped_at?: string | null
+          user_id: string
+        }
+        Update: {
+          allocation_usdt?: number
+          current_pnl?: number
+          id?: string
+          leader_id?: string
+          started_at?: string
+          status?: string
+          stopped_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "copy_follows_leader_id_fkey"
+            columns: ["leader_id"]
+            isOneToOne: false
+            referencedRelation: "copy_leaders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      copy_leaders: {
+        Row: {
+          aum_usdt: number
+          avatar_seed: string
+          badge: string | null
+          bio: string | null
+          created_at: string
+          display_name: string
+          followers: number
+          id: string
+          roi_30d: number
+          total_pnl: number
+          win_rate: number
+        }
+        Insert: {
+          aum_usdt?: number
+          avatar_seed: string
+          badge?: string | null
+          bio?: string | null
+          created_at?: string
+          display_name: string
+          followers?: number
+          id?: string
+          roi_30d: number
+          total_pnl?: number
+          win_rate: number
+        }
+        Update: {
+          aum_usdt?: number
+          avatar_seed?: string
+          badge?: string | null
+          bio?: string | null
+          created_at?: string
+          display_name?: string
+          followers?: number
+          id?: string
+          roi_30d?: number
+          total_pnl?: number
+          win_rate?: number
+        }
+        Relationships: []
+      }
+      futures_positions: {
+        Row: {
+          close_price: number | null
+          closed_at: string | null
+          entry_price: number
+          id: string
+          leverage: number
+          liquidation_price: number
+          margin_usdt: number
+          opened_at: string
+          realized_pnl: number | null
+          side: string
+          size_usdt: number
+          status: string
+          symbol: string
+          user_id: string
+        }
+        Insert: {
+          close_price?: number | null
+          closed_at?: string | null
+          entry_price: number
+          id?: string
+          leverage: number
+          liquidation_price: number
+          margin_usdt: number
+          opened_at?: string
+          realized_pnl?: number | null
+          side: string
+          size_usdt: number
+          status?: string
+          symbol: string
+          user_id: string
+        }
+        Update: {
+          close_price?: number | null
+          closed_at?: string | null
+          entry_price?: number
+          id?: string
+          leverage?: number
+          liquidation_price?: number
+          margin_usdt?: number
+          opened_at?: string
+          realized_pnl?: number | null
+          side?: string
+          size_usdt?: number
+          status?: string
+          symbol?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       holdings: {
         Row: {
           amount: number
@@ -47,11 +223,15 @@ export type Database = {
           asset_symbol: string
           created_at: string
           id: string
+          limit_price: number | null
+          linked_order_id: string | null
           order_type: string
           price: number
           side: string
           status: string
+          stop_price: number | null
           total_usdt: number
+          trail_percent: number | null
           user_id: string
         }
         Insert: {
@@ -59,11 +239,15 @@ export type Database = {
           asset_symbol: string
           created_at?: string
           id?: string
+          limit_price?: number | null
+          linked_order_id?: string | null
           order_type?: string
           price: number
           side: string
           status?: string
+          stop_price?: number | null
           total_usdt: number
+          trail_percent?: number | null
           user_id: string
         }
         Update: {
@@ -71,11 +255,15 @@ export type Database = {
           asset_symbol?: string
           created_at?: string
           id?: string
+          limit_price?: number | null
+          linked_order_id?: string | null
           order_type?: string
           price?: number
           side?: string
           status?: string
+          stop_price?: number | null
           total_usdt?: number
+          trail_percent?: number | null
           user_id?: string
         }
         Relationships: []
@@ -107,6 +295,77 @@ export type Database = {
           kyc_status?: string
           preferred_language?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      stakes: {
+        Row: {
+          amount: number
+          id: string
+          product_id: string
+          redeemed_at: string | null
+          rewards_accumulated: number
+          started_at: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          id?: string
+          product_id: string
+          redeemed_at?: string | null
+          rewards_accumulated?: number
+          started_at?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          id?: string
+          product_id?: string
+          redeemed_at?: string | null
+          rewards_accumulated?: number
+          started_at?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stakes_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "staking_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      staking_products: {
+        Row: {
+          apy: number
+          asset_symbol: string
+          badge: string | null
+          id: string
+          is_flexible: boolean
+          lock_days: number
+          min_amount: number
+        }
+        Insert: {
+          apy: number
+          asset_symbol: string
+          badge?: string | null
+          id?: string
+          is_flexible?: boolean
+          lock_days?: number
+          min_amount?: number
+        }
+        Update: {
+          apy?: number
+          asset_symbol?: string
+          badge?: string | null
+          id?: string
+          is_flexible?: boolean
+          lock_days?: number
+          min_amount?: number
         }
         Relationships: []
       }
