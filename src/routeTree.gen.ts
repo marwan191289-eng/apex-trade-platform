@@ -13,6 +13,10 @@ import { Route as WalletRouteImport } from './routes/wallet'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as MarketsRouteImport } from './routes/markets'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as FuturesRouteImport } from './routes/futures'
+import { Route as EarnRouteImport } from './routes/earn'
+import { Route as CopyRouteImport } from './routes/copy'
+import { Route as BotsRouteImport } from './routes/bots'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TradeSymbolRouteImport } from './routes/trade.$symbol'
 
@@ -36,6 +40,26 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FuturesRoute = FuturesRouteImport.update({
+  id: '/futures',
+  path: '/futures',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EarnRoute = EarnRouteImport.update({
+  id: '/earn',
+  path: '/earn',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CopyRoute = CopyRouteImport.update({
+  id: '/copy',
+  path: '/copy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BotsRoute = BotsRouteImport.update({
+  id: '/bots',
+  path: '/bots',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -49,6 +73,10 @@ const TradeSymbolRoute = TradeSymbolRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/bots': typeof BotsRoute
+  '/copy': typeof CopyRoute
+  '/earn': typeof EarnRoute
+  '/futures': typeof FuturesRoute
   '/login': typeof LoginRoute
   '/markets': typeof MarketsRoute
   '/signup': typeof SignupRoute
@@ -57,6 +85,10 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/bots': typeof BotsRoute
+  '/copy': typeof CopyRoute
+  '/earn': typeof EarnRoute
+  '/futures': typeof FuturesRoute
   '/login': typeof LoginRoute
   '/markets': typeof MarketsRoute
   '/signup': typeof SignupRoute
@@ -66,6 +98,10 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/bots': typeof BotsRoute
+  '/copy': typeof CopyRoute
+  '/earn': typeof EarnRoute
+  '/futures': typeof FuturesRoute
   '/login': typeof LoginRoute
   '/markets': typeof MarketsRoute
   '/signup': typeof SignupRoute
@@ -76,16 +112,34 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/bots'
+    | '/copy'
+    | '/earn'
+    | '/futures'
     | '/login'
     | '/markets'
     | '/signup'
     | '/wallet'
     | '/trade/$symbol'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/markets' | '/signup' | '/wallet' | '/trade/$symbol'
+  to:
+    | '/'
+    | '/bots'
+    | '/copy'
+    | '/earn'
+    | '/futures'
+    | '/login'
+    | '/markets'
+    | '/signup'
+    | '/wallet'
+    | '/trade/$symbol'
   id:
     | '__root__'
     | '/'
+    | '/bots'
+    | '/copy'
+    | '/earn'
+    | '/futures'
     | '/login'
     | '/markets'
     | '/signup'
@@ -95,6 +149,10 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BotsRoute: typeof BotsRoute
+  CopyRoute: typeof CopyRoute
+  EarnRoute: typeof EarnRoute
+  FuturesRoute: typeof FuturesRoute
   LoginRoute: typeof LoginRoute
   MarketsRoute: typeof MarketsRoute
   SignupRoute: typeof SignupRoute
@@ -132,6 +190,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/futures': {
+      id: '/futures'
+      path: '/futures'
+      fullPath: '/futures'
+      preLoaderRoute: typeof FuturesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/earn': {
+      id: '/earn'
+      path: '/earn'
+      fullPath: '/earn'
+      preLoaderRoute: typeof EarnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/copy': {
+      id: '/copy'
+      path: '/copy'
+      fullPath: '/copy'
+      preLoaderRoute: typeof CopyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bots': {
+      id: '/bots'
+      path: '/bots'
+      fullPath: '/bots'
+      preLoaderRoute: typeof BotsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -151,6 +237,10 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BotsRoute: BotsRoute,
+  CopyRoute: CopyRoute,
+  EarnRoute: EarnRoute,
+  FuturesRoute: FuturesRoute,
   LoginRoute: LoginRoute,
   MarketsRoute: MarketsRoute,
   SignupRoute: SignupRoute,

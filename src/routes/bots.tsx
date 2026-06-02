@@ -83,7 +83,7 @@ function GridForm({ coins }: { coins: Array<{ symbol: string; current_price: num
   return (
     <div className="space-y-3 text-sm">
       <Select label="Pair" value={symbol} onChange={(v) => { setSymbol(v); const p = coins.find((c) => c.symbol.toUpperCase() === v)?.current_price ?? 0; setLower(p * 0.9); setUpper(p * 1.1); }}>
-        {coins.slice(0, 50).map((c) => <option key={c.id ?? c.symbol} value={c.symbol.toUpperCase()}>{c.symbol.toUpperCase()}/USDT</option>)}
+        {coins.slice(0, 50).map((c) => <option key={c.symbol} value={c.symbol.toUpperCase()}>{c.symbol.toUpperCase()}/USDT</option>)}
       </Select>
       <Num label="Investment (USDT)" value={investment} onChange={setInvestment} />
       <div className="grid grid-cols-2 gap-3">
@@ -117,7 +117,7 @@ function DcaForm({ coins }: { coins: Array<{ symbol: string; current_price: numb
   return (
     <div className="space-y-3 text-sm">
       <Select label="Pair" value={symbol} onChange={setSymbol}>
-        {coins.slice(0, 50).map((c) => <option key={c.id ?? c.symbol} value={c.symbol.toUpperCase()}>{c.symbol.toUpperCase()}/USDT</option>)}
+        {coins.slice(0, 50).map((c) => <option key={c.symbol} value={c.symbol.toUpperCase()}>{c.symbol.toUpperCase()}/USDT</option>)}
       </Select>
       <Num label="Total budget (USDT)" value={investment} onChange={setInvestment} />
       <Num label="Per-order amount (USDT)" value={per} onChange={setPer} />
