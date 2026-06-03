@@ -9,6 +9,7 @@ import { TradePanel } from "@/components/TradePanel";
 import { CandlestickChart } from "@/components/CandlestickChart";
 import { coinDetailQuery, marketsQuery, symbolToId } from "@/lib/coingecko";
 import { fmtPrice, fmtPct, fmtCompact } from "@/lib/format";
+import { useLivePrice } from "@/lib/live-prices";
 
 export const Route = createFileRoute("/trade/$symbol")({
   head: ({ params }) => ({
@@ -51,8 +52,11 @@ function Content() {
 
   if (!coin) return <div className="p-8">Asset not found.</div>;
 
-  const up = (coin.price_change_percentage_24h ?? 0) >= 0;
   const sym = coin.symbol.toUpperCase();
+  const live = useLivePrice(coin.symbol);
+  const price = live?.price ?? coin.current_price;
+  const changePct = live?.changePct ?? coin.price_change_percentage_24h ?? 0;
+  const up = changePct >= 0;
 
   return (
     <main className="max-w-[1600px] mx-auto p-4">
@@ -66,9 +70,11 @@ function Content() {
           </div>
         </div>
         <div>
-          <div className={`text-2xl font-bold font-mono ${up ? "text-success" : "text-danger"}`}>${fmtPrice(coin.current_price)}</div>
-          <div className={`text-xs font-mono ${up ? "text-success" : "text-danger"}`}>{fmtPct(coin.price_change_percentage_24h)} (24h)</div>
+          <div className={`text-2xl font-bold font-mono ${up ? "text-success" : "text-danger"}`}>${fmtPrice(price)}</div>
+          <div className={`text-xs font-mono ${up ? "text-success" : "text-danger"}`}>{fmtPct(changePct)} (24h){live ? " • LIVE" : ""}</div>
         </div>
+        <Metric label="24h High" value={live ? `$${fmtPrice(live.high)}` : "—"} />
+        <Metric label="24h Low" value={live ? `$${fmtPrice(live.low)}` : "—"} />
         <Metric label="24h Volume" value={fmtCompact(coin.total_volume)} />
         <Metric label="Market Cap" value={fmtCompact(coin.market_cap)} />
         <Metric label="Rank" value={`#${coin.market_cap_rank}`} />
@@ -77,13 +83,13 @@ function Content() {
       {/* Main grid */}
       <div className="grid grid-cols-12 gap-4">
         <div className="col-span-12 lg:col-span-3 order-2 lg:order-1">
-          <OrderBook price={coin.current_price} symbol={sym} />
+          <OrderBook price={price} symbol={sym} />
         </div>
         <div className="col-span-12 lg:col-span-6 order-1 lg:order-2">
           <CandlestickChart symbol={sym} />
         </div>
         <div className="col-span-12 lg:col-span-3 order-3">
-          <TradePanel symbol={sym} price={coin.current_price} />
+          <TradePanel symbol={sym} price={price} />
         </div>
       </div>
     </main>

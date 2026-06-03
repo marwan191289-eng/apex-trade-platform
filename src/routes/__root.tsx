@@ -14,6 +14,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { I18nProvider } from "@/lib/i18n";
 import { AuthProvider } from "@/lib/auth-context";
+import { LivePricesProvider } from "@/lib/live-prices";
 
 function NotFoundComponent() {
   return (
@@ -114,8 +115,10 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <I18nProvider>
         <AuthProvider>
-          <Outlet />
-          <Toaster theme="dark" position="top-right" toastOptions={{ style: { background: "var(--bg-card)", border: "1px solid oklch(1 0 0 / 0.06)", color: "var(--foreground)" } }} />
+          <LivePricesProvider>
+            <Outlet />
+            <Toaster theme="dark" position="top-right" toastOptions={{ style: { background: "var(--bg-card)", border: "1px solid oklch(1 0 0 / 0.06)", color: "var(--foreground)" } }} />
+          </LivePricesProvider>
         </AuthProvider>
       </I18nProvider>
     </QueryClientProvider>
