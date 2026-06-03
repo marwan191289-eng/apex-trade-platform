@@ -13,9 +13,9 @@ import { ArrowRight, ShieldCheck, Zap, Globe2 } from "lucide-react";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Nexus — Professional Crypto Trading Platform" },
+      { title: "TradeXray — Professional Crypto Trading Platform" },
       { name: "description", content: "Trade Bitcoin, Ethereum and 200+ cryptocurrencies with live market data, deep liquidity, and a $10,000 virtual portfolio." },
-      { property: "og:title", content: "Nexus — Professional Crypto Trading" },
+      { property: "og:title", content: "TradeXray — Professional Crypto Trading" },
       { property: "og:description", content: "Live markets. Advanced trading. Paper-trade with $10,000 virtual USDT." },
     ],
   }),

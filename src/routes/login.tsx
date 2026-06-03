@@ -8,7 +8,7 @@ import { SocialAuthButtons } from "@/components/SocialAuthButtons";
 
 
 export const Route = createFileRoute("/login")({
-  head: () => ({ meta: [{ title: "Sign In — Nexus" }] }),
+  head: () => ({ meta: [{ title: "Sign In — TradeXray" }] }),
   component: LoginPage,
 });
 

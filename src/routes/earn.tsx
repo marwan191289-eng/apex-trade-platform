@@ -11,7 +11,7 @@ const productsQuery = queryOptions({ queryKey: ["staking-products"], queryFn: ()
 const stakesQuery = queryOptions({ queryKey: ["my-stakes"], queryFn: () => listMyStakes(), staleTime: 10_000 });
 
 export const Route = createFileRoute("/earn")({
-  head: () => ({ meta: [{ title: "Earn — Nexus" }, { name: "description", content: "Stake crypto and earn passive yield up to 12% APY." }] }),
+  head: () => ({ meta: [{ title: "Earn — TradeXray" }, { name: "description", content: "Stake crypto and earn passive yield up to 12% APY." }] }),
   errorComponent: ({ error }) => <div className="p-8 text-danger">{error.message}</div>,
   notFoundComponent: () => <div className="p-8">Not found</div>,
   component: EarnPage,

@@ -11,7 +11,7 @@ const leadersQuery = queryOptions({ queryKey: ["copy-leaders"], queryFn: () => l
 const followsQuery = queryOptions({ queryKey: ["copy-follows"], queryFn: () => listMyFollows(), staleTime: 5_000 });
 
 export const Route = createFileRoute("/copy")({
-  head: () => ({ meta: [{ title: "Copy Trading — Nexus" }, { name: "description", content: "Follow top traders and mirror their trades automatically." }] }),
+  head: () => ({ meta: [{ title: "Copy Trading — TradeXray" }, { name: "description", content: "Follow top traders and mirror their trades automatically." }] }),
   errorComponent: ({ error }) => <div className="p-8 text-danger">{error.message}</div>,
   notFoundComponent: () => <div className="p-8">Not found</div>,
   component: CopyPage,
