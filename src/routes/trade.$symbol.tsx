@@ -81,7 +81,7 @@ function Content() {
           <OrderBook price={coin.current_price} symbol={sym} />
         </div>
         <div className="col-span-12 lg:col-span-6 order-1 lg:order-2">
-          <CandlestickChart data={ohlc} />
+          <CandlestickChart symbol={sym} />
         </div>
         <div className="col-span-12 lg:col-span-3 order-3">
           <TradePanel symbol={sym} price={coin.current_price} />
