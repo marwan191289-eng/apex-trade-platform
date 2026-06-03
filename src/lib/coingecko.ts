@@ -21,18 +21,25 @@ async function fetchJson<T>(url: string): Promise<T> {
   return res.json() as Promise<T>;
 }
 
-// Fetch top 250 coins by market cap — covers virtually every asset listed on
-// major centralized exchanges (Binance, Bybit, OKX, etc).
+// In-memory fallback so a transient 429/network error doesn't blank the SSR.
+let lastMarkets: MarketCoin[] = [];
+
 async function fetchAllMarkets(): Promise<MarketCoin[]> {
-  const [p1, p2] = await Promise.all([
-    fetchJson<MarketCoin[]>(
-      `${BASE}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=true&price_change_percentage=24h`
-    ),
-    fetchJson<MarketCoin[]>(
-      `${BASE}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=2&sparkline=true&price_change_percentage=24h`
-    ).catch(() => [] as MarketCoin[]),
-  ]);
-  return [...p1, ...p2];
+  try {
+    const [p1, p2] = await Promise.all([
+      fetchJson<MarketCoin[]>(
+        `${BASE}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=true&price_change_percentage=24h`
+      ),
+      fetchJson<MarketCoin[]>(
+        `${BASE}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=2&sparkline=true&price_change_percentage=24h`
+      ).catch(() => [] as MarketCoin[]),
+    ]);
+    lastMarkets = [...p1, ...p2];
+    return lastMarkets;
+  } catch (err) {
+    console.error("[coingecko] markets fetch failed, using cached fallback", err);
+    return lastMarkets;
+  }
 }
 
 export const marketsQuery = queryOptions({
@@ -40,6 +47,7 @@ export const marketsQuery = queryOptions({
   queryFn: fetchAllMarkets,
   staleTime: 60_000,
   refetchInterval: 60_000,
+  retry: 1,
 });
 
 // Resolve a ticker symbol (e.g. "BTC") to a CoinGecko id by looking it up in
