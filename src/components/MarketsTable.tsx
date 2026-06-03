@@ -39,8 +39,10 @@ export function MarketsTable({ coins, limit }: { coins: MarketCoin[]; limit?: nu
                       <span className="text-muted-foreground text-xs uppercase">{c.symbol}</span>
                     </Link>
                   </td>
-                  <td className="px-4 py-4 text-right font-mono">${fmtPrice(c.current_price)}</td>
-                  <td className={`px-4 py-4 text-right font-mono ${up ? "text-success" : "text-danger"}`}>{fmtPct(c.price_change_percentage_24h)}</td>
+                  <td className="px-4 py-4 text-right">
+                    <LivePriceCell symbol={c.symbol} fallbackPrice={c.current_price} fallbackChangePct={c.price_change_percentage_24h} />
+                  </td>
+                  <td className={`px-4 py-4 text-right font-mono ${up ? "text-success" : "text-danger"}`}><LiveChange symbol={c.symbol} fallback={c.price_change_percentage_24h} /></td>
                   <td className="px-4 py-4 text-right text-muted-foreground hidden md:table-cell font-mono">{fmtCompact(c.total_volume)}</td>
                   <td className="px-4 py-4 text-right text-muted-foreground hidden lg:table-cell font-mono">{fmtCompact(c.market_cap)}</td>
                   <td className="px-4 py-4 hidden md:table-cell">
