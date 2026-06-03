@@ -5,7 +5,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { marketsQuery } from "@/lib/coingecko";
+import { marketsQuery, type MarketCoin } from "@/lib/coingecko";
 import { createBot, stopBot, listBots } from "@/lib/bots.functions";
 import { fmtPrice } from "@/lib/format";
 
