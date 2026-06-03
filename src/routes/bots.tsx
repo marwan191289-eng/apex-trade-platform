@@ -48,7 +48,7 @@ function Content() {
   );
 }
 
-function CreateBotPanel({ coins }: { coins: Array<{ symbol: string; current_price: number }> }) {
+function CreateBotPanel({ coins }: { coins: MarketCoin[] }) {
   const [tab, setTab] = useState<"grid" | "dca">("grid");
   return (
     <div className="bg-bg-card border border-white/5 rounded-lg p-5">
@@ -61,7 +61,7 @@ function CreateBotPanel({ coins }: { coins: Array<{ symbol: string; current_pric
   );
 }
 
-function GridForm({ coins }: { coins: Array<{ symbol: string; current_price: number }> }) {
+function GridForm({ coins }: { coins: MarketCoin[] }) {
   const create = useServerFn(createBot);
   const qc = useQueryClient();
   const [symbol, setSymbol] = useState("BTC");
@@ -97,7 +97,7 @@ function GridForm({ coins }: { coins: Array<{ symbol: string; current_price: num
   );
 }
 
-function DcaForm({ coins }: { coins: Array<{ symbol: string; current_price: number }> }) {
+function DcaForm({ coins }: { coins: MarketCoin[] }) {
   const create = useServerFn(createBot);
   const qc = useQueryClient();
   const [symbol, setSymbol] = useState("BTC");
