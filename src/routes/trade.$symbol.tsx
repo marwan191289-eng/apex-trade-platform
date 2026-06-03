@@ -47,7 +47,7 @@ function Content() {
   const { data: coins } = useSuspenseQuery(marketsQuery);
   const id = symbolToId(symbol, coins);
   const { data: coin } = useSuspenseQuery(coinDetailQuery(id));
-  const { data: ohlc } = useSuspenseQuery(ohlcQuery(id, 1));
+  
 
 
   if (!coin) return <div className="p-8">Asset not found.</div>;
