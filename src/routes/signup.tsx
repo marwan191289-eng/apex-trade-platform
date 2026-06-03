@@ -8,7 +8,7 @@ import { SocialAuthButtons } from "@/components/SocialAuthButtons";
 
 
 export const Route = createFileRoute("/signup")({
-  head: () => ({ meta: [{ title: "Create Account — Nexus" }] }),
+  head: () => ({ meta: [{ title: "Create Account — TradeXray" }] }),
   component: SignupPage,
 });
 
@@ -40,7 +40,7 @@ function SignupPage() {
   return (
     <div className="min-h-screen bg-bg-main flex items-center justify-center px-4 py-12 gradient-hero">
       <div className="w-full max-w-md">
-        <Link to="/" className="block text-center text-accent font-bold text-3xl tracking-tighter mb-8">NEXUS</Link>
+        <Link to="/" className="block text-center font-bold text-3xl tracking-tight mb-8">Trade<span className="text-accent">X</span>ray</Link>
         <div className="bg-bg-card border border-white/5 rounded-xl p-8">
           <h1 className="text-2xl font-bold mb-1">{t("auth.signup.title")}</h1>
           <p className="text-sm text-muted-foreground mb-6">{t("auth.signup.subtitle")}</p>

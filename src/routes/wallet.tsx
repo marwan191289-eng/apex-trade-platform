@@ -11,7 +11,7 @@ import { useAuth } from "@/lib/auth-context";
 import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/wallet")({
-  head: () => ({ meta: [{ title: "Wallet — Nexus" }] }),
+  head: () => ({ meta: [{ title: "Wallet — TradeXray" }] }),
   component: WalletPage,
 });
 

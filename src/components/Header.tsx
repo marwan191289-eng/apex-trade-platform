@@ -2,6 +2,7 @@ import { Link, useRouter } from "@tanstack/react-router";
 import { useI18n } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth-context";
 import { Languages, LogOut } from "lucide-react";
+import logoIcon from "@/assets/icon.png";
 
 export function Header() {
   const { t, lang, toggle } = useI18n();
@@ -12,8 +13,11 @@ export function Header() {
     <nav className="border-b border-white/5 bg-bg-main/85 backdrop-blur-md sticky top-0 z-50">
       <div className="max-w-[1600px] mx-auto px-4 h-16 flex items-center justify-between gap-4">
         <div className="flex items-center gap-8">
-          <Link to="/" className="text-accent font-bold text-2xl tracking-tighter">
-            NEXUS
+          <Link to="/" className="flex items-center gap-2 group" aria-label="TradeXray home">
+            <img src={logoIcon} alt="" width={28} height={28} className="rounded-md" />
+            <span className="font-bold text-xl tracking-tight">
+              Trade<span className="text-accent">X</span>ray
+            </span>
           </Link>
           <div className="hidden md:flex items-center gap-6 text-sm font-medium text-muted-foreground">
             <Link to="/markets" className="hover:text-foreground transition-colors [&.active]:text-foreground [&.active]:border-b-2 [&.active]:border-accent py-5">

@@ -18,7 +18,7 @@ const positionsQuery = queryOptions({
 });
 
 export const Route = createFileRoute("/futures")({
-  head: () => ({ meta: [{ title: "Futures — Nexus" }, { name: "description", content: "Trade perpetual crypto futures with up to 125x leverage." }] }),
+  head: () => ({ meta: [{ title: "Futures — TradeXray" }, { name: "description", content: "Trade perpetual crypto futures with up to 125x leverage." }] }),
   errorComponent: ({ error }) => <div className="p-8 text-danger">{error.message}</div>,
   notFoundComponent: () => <div className="p-8">Not found</div>,
   component: FuturesPage,

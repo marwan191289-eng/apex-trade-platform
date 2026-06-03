@@ -13,7 +13,7 @@ import { fmtPrice, fmtPct, fmtCompact } from "@/lib/format";
 export const Route = createFileRoute("/trade/$symbol")({
   head: ({ params }) => ({
     meta: [
-      { title: `${params.symbol.toUpperCase()}/USDT — Trade — Nexus` },
+      { title: `${params.symbol.toUpperCase()}/USDT — Trade — TradeXray` },
       { name: "description", content: `Trade ${params.symbol.toUpperCase()} with live price chart, order book and instant execution.` },
     ],
   }),

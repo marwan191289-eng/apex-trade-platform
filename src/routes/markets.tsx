@@ -12,9 +12,9 @@ import { useI18n } from "@/lib/i18n";
 export const Route = createFileRoute("/markets")({
   head: () => ({
     meta: [
-      { title: "Markets — Nexus" },
+      { title: "Markets — TradeXray" },
       { name: "description", content: "Live cryptocurrency prices, 24h change, market cap and volume for top 50 digital assets." },
-      { property: "og:title", content: "Crypto Markets — Nexus" },
+      { property: "og:title", content: "Crypto Markets — TradeXray" },
       { property: "og:description", content: "Real-time prices for Bitcoin, Ethereum, Solana and more." },
     ],
   }),
