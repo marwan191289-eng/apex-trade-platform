@@ -7,7 +7,7 @@ import { TickerBar, TickerBarFallback } from "@/components/TickerBar";
 import { OrderBook } from "@/components/OrderBook";
 import { TradePanel } from "@/components/TradePanel";
 import { CandlestickChart } from "@/components/CandlestickChart";
-import { coinDetailQuery, marketsQuery, ohlcQuery, symbolToId } from "@/lib/coingecko";
+import { coinDetailQuery, marketsQuery, symbolToId } from "@/lib/coingecko";
 import { fmtPrice, fmtPct, fmtCompact } from "@/lib/format";
 
 export const Route = createFileRoute("/trade/$symbol")({
