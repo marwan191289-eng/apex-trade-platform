@@ -21,7 +21,6 @@ export const Route = createFileRoute("/trade/$symbol")({
     const coins = await context.queryClient.ensureQueryData(marketsQuery);
     const id = symbolToId(params.symbol, coins);
     context.queryClient.ensureQueryData(coinDetailQuery(id));
-    context.queryClient.ensureQueryData(ohlcQuery(id, 1));
   },
   errorComponent: ({ error }) => <div className="p-8 text-danger">{error.message}</div>,
   notFoundComponent: () => <div className="p-8">Not found</div>,
