@@ -7,7 +7,7 @@ export function Footer() {
     <footer className="border-t border-white/5 bg-bg-main mt-20">
       <div className="max-w-[1600px] mx-auto px-4 py-12 grid grid-cols-2 md:grid-cols-4 gap-8">
         <div className="col-span-2">
-          <div className="text-accent font-bold text-2xl tracking-tighter mb-3">NEXUS</div>
+          <div className="font-bold text-2xl tracking-tight mb-3">Trade<span className="text-accent">X</span>ray</div>
           <p className="text-sm text-muted-foreground max-w-sm">{t("footer.tagline")}</p>
         </div>
         <div>
