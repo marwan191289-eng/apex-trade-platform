@@ -73,10 +73,12 @@ export const coinDetailQuery = (id: string) => queryOptions({
   queryKey: ["coin", id],
   queryFn: () => fetchJson<MarketCoin[]>(
     `${BASE}/coins/markets?vs_currency=usd&ids=${id}&sparkline=true&price_change_percentage=24h`
-  ).then(arr => arr[0]),
+  ).then(arr => arr[0] ?? lastMarkets.find(c => c.id === id) ?? null)
+   .catch(() => lastMarkets.find(c => c.id === id) ?? null),
   staleTime: 30_000,
   refetchInterval: 15_000,
   enabled: !!id,
+  retry: 1,
 });
 
 export interface OHLC { time: number; open: number; high: number; low: number; close: number; }
