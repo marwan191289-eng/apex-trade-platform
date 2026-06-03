@@ -3,6 +3,8 @@ import type { MarketCoin } from "@/lib/coingecko";
 import { fmtPrice, fmtPct, fmtCompact } from "@/lib/format";
 import { Sparkline } from "./Sparkline";
 import { useI18n } from "@/lib/i18n";
+import { useLivePrices } from "@/lib/live-prices";
+import { LivePriceCell } from "./LivePriceCell";
 
 export function MarketsTable({ coins, limit }: { coins: MarketCoin[]; limit?: number }) {
   const { t } = useI18n();
