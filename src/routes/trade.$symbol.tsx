@@ -9,6 +9,7 @@ import { TradePanel } from "@/components/TradePanel";
 import { CandlestickChart } from "@/components/CandlestickChart";
 import { coinDetailQuery, marketsQuery, symbolToId } from "@/lib/coingecko";
 import { fmtPrice, fmtPct, fmtCompact } from "@/lib/format";
+import { useLivePrice } from "@/lib/live-prices";
 
 export const Route = createFileRoute("/trade/$symbol")({
   head: ({ params }) => ({
