@@ -1,10 +1,15 @@
 import { Link } from "@tanstack/react-router";
 import type { MarketCoin } from "@/lib/coingecko";
-import { fmtPrice, fmtPct, fmtCompact } from "@/lib/format";
+import { fmtPct, fmtCompact } from "@/lib/format";
 import { Sparkline } from "./Sparkline";
 import { useI18n } from "@/lib/i18n";
-import { useLivePrices } from "@/lib/live-prices";
+import { useLivePrice } from "@/lib/live-prices";
 import { LivePriceCell } from "./LivePriceCell";
+
+function LiveChange({ symbol, fallback }: { symbol: string; fallback?: number }) {
+  const live = useLivePrice(symbol);
+  return <>{fmtPct(live?.changePct ?? fallback ?? 0)}</>;
+}
 
 export function MarketsTable({ coins, limit }: { coins: MarketCoin[]; limit?: number }) {
   const { t } = useI18n();
