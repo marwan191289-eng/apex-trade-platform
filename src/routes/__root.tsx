@@ -115,8 +115,10 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <I18nProvider>
         <AuthProvider>
-          <Outlet />
-          <Toaster theme="dark" position="top-right" toastOptions={{ style: { background: "var(--bg-card)", border: "1px solid oklch(1 0 0 / 0.06)", color: "var(--foreground)" } }} />
+          <LivePricesProvider>
+            <Outlet />
+            <Toaster theme="dark" position="top-right" toastOptions={{ style: { background: "var(--bg-card)", border: "1px solid oklch(1 0 0 / 0.06)", color: "var(--foreground)" } }} />
+          </LivePricesProvider>
         </AuthProvider>
       </I18nProvider>
     </QueryClientProvider>
