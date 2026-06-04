@@ -7,6 +7,7 @@ import { TickerBar, TickerBarFallback } from "@/components/TickerBar";
 import { OrderBook } from "@/components/OrderBook";
 import { TradePanel } from "@/components/TradePanel";
 import { CandlestickChart } from "@/components/CandlestickChart";
+import { PricePrediction } from "@/components/PricePrediction";
 import { coinDetailQuery, marketsQuery, symbolToId } from "@/lib/coingecko";
 import { fmtPrice, fmtPct, fmtCompact } from "@/lib/format";
 import { useLivePrice } from "@/lib/live-prices";
@@ -85,8 +86,9 @@ function Content() {
         <div className="col-span-12 lg:col-span-3 order-2 lg:order-1">
           <OrderBook price={price} symbol={sym} />
         </div>
-        <div className="col-span-12 lg:col-span-6 order-1 lg:order-2">
+        <div className="col-span-12 lg:col-span-6 order-1 lg:order-2 space-y-4">
           <CandlestickChart symbol={sym} />
+          <PricePrediction symbol={sym} changePct24h={changePct} />
         </div>
         <div className="col-span-12 lg:col-span-3 order-3">
           <TradePanel symbol={sym} price={price} />
