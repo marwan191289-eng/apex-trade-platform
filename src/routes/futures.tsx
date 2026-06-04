@@ -7,6 +7,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { CandlestickChart } from "@/components/CandlestickChart";
 import { OrderBook } from "@/components/OrderBook";
+import { PricePrediction } from "@/components/PricePrediction";
 import { marketsQuery } from "@/lib/coingecko";
 import { fmtPrice, fmtPct } from "@/lib/format";
 import { openFuturesPosition, closeFuturesPosition, listFuturesPositions } from "@/lib/futures.functions";
@@ -74,8 +75,9 @@ function Content() {
         <div className="col-span-12 lg:col-span-3 order-2 lg:order-1">
           <OrderBook price={price} symbol={symbol} />
         </div>
-        <div className="col-span-12 lg:col-span-6 order-1 lg:order-2">
+        <div className="col-span-12 lg:col-span-6 order-1 lg:order-2 space-y-4">
           <CandlestickChart symbol={symbol} />
+          <PricePrediction symbol={symbol} changePct24h={changePct} />
         </div>
         <div className="col-span-12 lg:col-span-3 order-3">
           <OpenPositionForm symbol={symbol} price={price} />
