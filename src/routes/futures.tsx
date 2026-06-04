@@ -174,7 +174,7 @@ function PositionsList({ currentPrices }: { currentPrices: Array<{ symbol: strin
       ) : (
         <div className="space-y-2">
           {open.map((p) => {
-            const cur = priceMap.get(p.symbol) ?? p.entry_price;
+            const cur = priceFor(p.symbol) || p.entry_price;
             const qty = p.size_usdt / p.entry_price;
             const pnl = p.side === "long" ? (cur - p.entry_price) * qty : (p.entry_price - cur) * qty;
             const pnlPct = (pnl / p.margin_usdt) * 100;
