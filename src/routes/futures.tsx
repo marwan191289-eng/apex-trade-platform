@@ -44,34 +44,45 @@ function Content() {
   const { data: coins } = useSuspenseQuery(marketsQuery);
   const [symbol, setSymbol] = useState("BTC");
   const coin = coins.find((c) => c.symbol.toUpperCase() === symbol) ?? coins[0];
+  const live = useLivePrice(coin.symbol);
+  const price = live?.price ?? coin.current_price;
+  const changePct = live?.changePct ?? coin.price_change_percentage_24h ?? 0;
   return (
     <>
-      <div className="mb-6">
-        <h1 className="text-3xl md:text-4xl font-bold mb-1">Perpetual Futures</h1>
-        <p className="text-muted-foreground text-sm">Open leveraged long/short positions on any major asset. Up to 125x.</p>
-      </div>
-      <div className="grid grid-cols-12 gap-4">
-        <div className="col-span-12 lg:col-span-8 bg-bg-card border border-white/5 rounded-lg p-5">
-          <div className="flex items-center gap-3 mb-4">
-            <select
-              value={symbol}
-              onChange={(e) => setSymbol(e.target.value)}
-              className="bg-bg-main border border-white/10 rounded p-2 text-sm font-mono"
-            >
-              {coins.slice(0, 50).map((c) => (
-                <option key={c.id} value={c.symbol.toUpperCase()}>{c.symbol.toUpperCase()}/USDT-PERP</option>
-              ))}
-            </select>
-            <div className="text-2xl font-mono font-bold">${fmtPrice(coin.current_price)}</div>
-            <div className={`text-sm font-mono ${coin.price_change_percentage_24h >= 0 ? "text-success" : "text-danger"}`}>
-              {fmtPct(coin.price_change_percentage_24h)}
-            </div>
+      <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h1 className="text-3xl md:text-4xl font-bold mb-1">Perpetual Futures</h1>
+          <p className="text-muted-foreground text-sm">Open leveraged long/short positions on any major asset. Up to 125x.</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <select
+            value={symbol}
+            onChange={(e) => setSymbol(e.target.value)}
+            className="bg-bg-card border border-white/10 rounded p-2 text-sm font-mono"
+          >
+            {coins.slice(0, 50).map((c) => (
+              <option key={c.id} value={c.symbol.toUpperCase()}>{c.symbol.toUpperCase()}/USDT-PERP</option>
+            ))}
+          </select>
+          <div className="text-2xl font-mono font-bold">${fmtPrice(price)}</div>
+          <div className={`text-sm font-mono ${changePct >= 0 ? "text-success" : "text-danger"}`}>
+            {fmtPct(changePct)}{live ? " • LIVE" : ""}
           </div>
-          <PositionsList currentPrices={coins} />
         </div>
-        <div className="col-span-12 lg:col-span-4">
-          <OpenPositionForm symbol={symbol} price={coin.current_price} />
+      </div>
+      <div className="grid grid-cols-12 gap-4 mb-4">
+        <div className="col-span-12 lg:col-span-3 order-2 lg:order-1">
+          <OrderBook price={price} symbol={symbol} />
         </div>
+        <div className="col-span-12 lg:col-span-6 order-1 lg:order-2">
+          <CandlestickChart symbol={symbol} />
+        </div>
+        <div className="col-span-12 lg:col-span-3 order-3">
+          <OpenPositionForm symbol={symbol} price={price} />
+        </div>
+      </div>
+      <div className="bg-bg-card border border-white/5 rounded-lg p-5">
+        <PositionsList currentPrices={coins} />
       </div>
     </>
   );
