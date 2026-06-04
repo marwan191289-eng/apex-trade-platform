@@ -5,10 +5,12 @@ import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { CandlestickChart } from "@/components/CandlestickChart";
+import { OrderBook } from "@/components/OrderBook";
 import { marketsQuery } from "@/lib/coingecko";
 import { fmtPrice, fmtPct } from "@/lib/format";
 import { openFuturesPosition, closeFuturesPosition, listFuturesPositions } from "@/lib/futures.functions";
-import { portfolioQuery } from "@/lib/portfolio-query";
+import { useLivePrice, useLivePrices } from "@/lib/live-prices";
 import { queryOptions } from "@tanstack/react-query";
 
 const positionsQuery = queryOptions({
