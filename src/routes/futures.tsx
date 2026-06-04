@@ -5,10 +5,12 @@ import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { CandlestickChart } from "@/components/CandlestickChart";
+import { OrderBook } from "@/components/OrderBook";
 import { marketsQuery } from "@/lib/coingecko";
 import { fmtPrice, fmtPct } from "@/lib/format";
 import { openFuturesPosition, closeFuturesPosition, listFuturesPositions } from "@/lib/futures.functions";
-import { portfolioQuery } from "@/lib/portfolio-query";
+import { useLivePrice, useLivePrices } from "@/lib/live-prices";
 import { queryOptions } from "@tanstack/react-query";
 
 const positionsQuery = queryOptions({
@@ -42,34 +44,45 @@ function Content() {
   const { data: coins } = useSuspenseQuery(marketsQuery);
   const [symbol, setSymbol] = useState("BTC");
   const coin = coins.find((c) => c.symbol.toUpperCase() === symbol) ?? coins[0];
+  const live = useLivePrice(coin.symbol);
+  const price = live?.price ?? coin.current_price;
+  const changePct = live?.changePct ?? coin.price_change_percentage_24h ?? 0;
   return (
     <>
-      <div className="mb-6">
-        <h1 className="text-3xl md:text-4xl font-bold mb-1">Perpetual Futures</h1>
-        <p className="text-muted-foreground text-sm">Open leveraged long/short positions on any major asset. Up to 125x.</p>
-      </div>
-      <div className="grid grid-cols-12 gap-4">
-        <div className="col-span-12 lg:col-span-8 bg-bg-card border border-white/5 rounded-lg p-5">
-          <div className="flex items-center gap-3 mb-4">
-            <select
-              value={symbol}
-              onChange={(e) => setSymbol(e.target.value)}
-              className="bg-bg-main border border-white/10 rounded p-2 text-sm font-mono"
-            >
-              {coins.slice(0, 50).map((c) => (
-                <option key={c.id} value={c.symbol.toUpperCase()}>{c.symbol.toUpperCase()}/USDT-PERP</option>
-              ))}
-            </select>
-            <div className="text-2xl font-mono font-bold">${fmtPrice(coin.current_price)}</div>
-            <div className={`text-sm font-mono ${coin.price_change_percentage_24h >= 0 ? "text-success" : "text-danger"}`}>
-              {fmtPct(coin.price_change_percentage_24h)}
-            </div>
+      <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h1 className="text-3xl md:text-4xl font-bold mb-1">Perpetual Futures</h1>
+          <p className="text-muted-foreground text-sm">Open leveraged long/short positions on any major asset. Up to 125x.</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <select
+            value={symbol}
+            onChange={(e) => setSymbol(e.target.value)}
+            className="bg-bg-card border border-white/10 rounded p-2 text-sm font-mono"
+          >
+            {coins.slice(0, 50).map((c) => (
+              <option key={c.id} value={c.symbol.toUpperCase()}>{c.symbol.toUpperCase()}/USDT-PERP</option>
+            ))}
+          </select>
+          <div className="text-2xl font-mono font-bold">${fmtPrice(price)}</div>
+          <div className={`text-sm font-mono ${changePct >= 0 ? "text-success" : "text-danger"}`}>
+            {fmtPct(changePct)}{live ? " • LIVE" : ""}
           </div>
-          <PositionsList currentPrices={coins} />
         </div>
-        <div className="col-span-12 lg:col-span-4">
-          <OpenPositionForm symbol={symbol} price={coin.current_price} />
+      </div>
+      <div className="grid grid-cols-12 gap-4 mb-4">
+        <div className="col-span-12 lg:col-span-3 order-2 lg:order-1">
+          <OrderBook price={price} symbol={symbol} />
         </div>
+        <div className="col-span-12 lg:col-span-6 order-1 lg:order-2">
+          <CandlestickChart symbol={symbol} />
+        </div>
+        <div className="col-span-12 lg:col-span-3 order-3">
+          <OpenPositionForm symbol={symbol} price={price} />
+        </div>
+      </div>
+      <div className="bg-bg-card border border-white/5 rounded-lg p-5">
+        <PositionsList currentPrices={coins} />
       </div>
     </>
   );
@@ -136,13 +149,15 @@ function PositionsList({ currentPrices }: { currentPrices: Array<{ symbol: strin
   const { data: positions } = useSuspenseQuery(positionsQuery);
   const close = useServerFn(closeFuturesPosition);
   const qc = useQueryClient();
-  const priceMap = useMemo(() => new Map(currentPrices.map((c) => [c.symbol.toUpperCase(), c.current_price])), [currentPrices]);
+  const livePrices = useLivePrices();
+  const fallbackMap = useMemo(() => new Map(currentPrices.map((c) => [c.symbol.toUpperCase(), c.current_price])), [currentPrices]);
+  const priceFor = (sym: string) => livePrices[sym.toLowerCase()]?.price ?? fallbackMap.get(sym.toUpperCase()) ?? 0;
 
   const open = positions.filter((p) => p.status === "open");
   const closed = positions.filter((p) => p.status !== "open");
 
   const onClose = async (id: string, symbol: string) => {
-    const exit = priceMap.get(symbol) ?? 0;
+    const exit = priceFor(symbol);
     try {
       const r = await close({ data: { position_id: id, exit_price: exit } });
       toast.success(`Closed. PnL: $${r.pnl.toFixed(2)}`);
@@ -159,7 +174,7 @@ function PositionsList({ currentPrices }: { currentPrices: Array<{ symbol: strin
       ) : (
         <div className="space-y-2">
           {open.map((p) => {
-            const cur = priceMap.get(p.symbol) ?? p.entry_price;
+            const cur = priceFor(p.symbol) || p.entry_price;
             const qty = p.size_usdt / p.entry_price;
             const pnl = p.side === "long" ? (cur - p.entry_price) * qty : (p.entry_price - cur) * qty;
             const pnlPct = (pnl / p.margin_usdt) * 100;
