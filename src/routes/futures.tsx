@@ -149,13 +149,15 @@ function PositionsList({ currentPrices }: { currentPrices: Array<{ symbol: strin
   const { data: positions } = useSuspenseQuery(positionsQuery);
   const close = useServerFn(closeFuturesPosition);
   const qc = useQueryClient();
-  const priceMap = useMemo(() => new Map(currentPrices.map((c) => [c.symbol.toUpperCase(), c.current_price])), [currentPrices]);
+  const livePrices = useLivePrices();
+  const fallbackMap = useMemo(() => new Map(currentPrices.map((c) => [c.symbol.toUpperCase(), c.current_price])), [currentPrices]);
+  const priceFor = (sym: string) => livePrices[sym.toLowerCase()]?.price ?? fallbackMap.get(sym.toUpperCase()) ?? 0;
 
   const open = positions.filter((p) => p.status === "open");
   const closed = positions.filter((p) => p.status !== "open");
 
   const onClose = async (id: string, symbol: string) => {
-    const exit = priceMap.get(symbol) ?? 0;
+    const exit = priceFor(symbol);
     try {
       const r = await close({ data: { position_id: id, exit_price: exit } });
       toast.success(`Closed. PnL: $${r.pnl.toFixed(2)}`);
