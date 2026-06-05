@@ -45,12 +45,8 @@ function WalletContent() {
   const live = useLivePrices();
   const [tab, setTab] = useState<"holdings" | "history">("holdings");
 
-  if (portfolio.isLoading) return <div className="max-w-[1600px] mx-auto p-8 text-muted-foreground">Loading…</div>;
-  if (portfolio.error) return <div className="max-w-[1600px] mx-auto p-8 text-danger">{(portfolio.error as Error).message}</div>;
-
-  const data = portfolio.data!;
-
-  const enriched = useMemo(() => data.holdings.map((h) => {
+  const holdings = portfolio.data?.holdings ?? [];
+  const enriched = useMemo(() => holdings.map((h) => {
     const tick = live[h.symbol.toLowerCase()];
     const price = tick?.price ?? h.avg_price;
     const ch24 = tick?.changePct ?? 0;
@@ -59,7 +55,12 @@ function WalletContent() {
     const pnl = value - cost;
     const pnlPct = cost > 0 ? (pnl / cost) * 100 : 0;
     return { ...h, price, ch24, value, cost, pnl, pnlPct };
-  }), [data.holdings, live]);
+  }), [holdings, live]);
+
+  if (portfolio.isLoading) return <div className="max-w-[1600px] mx-auto p-8 text-muted-foreground">Loading…</div>;
+  if (portfolio.error) return <div className="max-w-[1600px] mx-auto p-8 text-danger">{(portfolio.error as Error).message}</div>;
+
+  const data = portfolio.data!;
 
   const investedValue = enriched.reduce((s, h) => s + h.cost, 0);
   const currentValue = enriched.reduce((s, h) => s + h.value, 0);
