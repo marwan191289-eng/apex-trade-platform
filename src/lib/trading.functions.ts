@@ -22,7 +22,7 @@ export const executeTrade = createServerFn({ method: "POST" })
       .select("balance_usdt")
       .eq("user_id", userId)
       .maybeSingle();
-    if (wErr) throw new Error(wErr.message);
+    if (wErr) { console.error("[trading] wallet fetch", wErr.message); throw new Error("Operation failed. Please try again."); }
     if (!wallet) throw new Error("Wallet not found");
 
     const balance = Number(wallet.balance_usdt);
