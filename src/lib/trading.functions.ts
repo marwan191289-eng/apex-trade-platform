@@ -101,7 +101,7 @@ export const executeTrade = createServerFn({ method: "POST" })
       total_usdt: total,
       status: "filled",
     });
-    if (oErr) throw new Error(oErr.message);
+    if (oErr) { console.error("[trading] order insert", oErr.message); throw new Error("Operation failed. Please try again."); }
 
     return { success: true, symbol: data.symbol, side: data.side, total };
   });
