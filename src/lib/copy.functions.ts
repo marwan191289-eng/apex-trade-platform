@@ -44,7 +44,7 @@ export const followLeader = createServerFn({ method: "POST" })
       leader_id: data.leader_id,
       allocation_usdt: data.allocation_usdt,
     });
-    if (error) throw new Error(error.message);
+    if (error) { console.error("[copy]", error.message); throw new Error("Operation failed. Please try again."); }
     return { success: true };
   });
 
