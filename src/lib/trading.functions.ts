@@ -35,7 +35,7 @@ export const executeTrade = createServerFn({ method: "POST" })
         .from("wallets")
         .update({ balance_usdt: balance - total, updated_at: new Date().toISOString() })
         .eq("user_id", userId);
-      if (uErr) throw new Error(uErr.message);
+      if (uErr) { console.error("[trading] wallet update", uErr.message); throw new Error("Operation failed. Please try again."); }
 
       // Upsert holding
       const { data: existing } = await supabase
