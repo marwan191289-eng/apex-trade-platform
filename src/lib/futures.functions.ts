@@ -44,7 +44,7 @@ export const openFuturesPosition = createServerFn({ method: "POST" })
       margin_usdt: data.margin_usdt,
       liquidation_price: liq,
     });
-    if (error) throw new Error(error.message);
+    if (error) { console.error("[futures]", error.message); throw new Error("Operation failed. Please try again."); }
     return { success: true };
   });
 

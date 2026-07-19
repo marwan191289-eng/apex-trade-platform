@@ -5,6 +5,7 @@ import { useIndicators } from "@/lib/indicators";
 import { useLivePrice } from "@/lib/live-prices";
 import { getPricePrediction, type Prediction } from "@/lib/predictions.functions";
 import { fmtPrice, fmtPct } from "@/lib/format";
+import { useAuth } from "@/lib/auth-context";
 
 interface Props {
   symbol: string; // e.g. "BTC"
@@ -12,6 +13,7 @@ interface Props {
 }
 
 export function PricePrediction({ symbol, changePct24h = 0 }: Props) {
+  const { user } = useAuth();
   const { indicators } = useIndicators(symbol, "1m");
   const live = useLivePrice(symbol);
   const price = live?.price;
@@ -21,7 +23,7 @@ export function PricePrediction({ symbol, changePct24h = 0 }: Props) {
   const [updatedAt, setUpdatedAt] = useState<number | null>(null);
 
   useEffect(() => {
-    if (!indicators || !price) return;
+    if (!indicators || !price || !user) return;
     let cancelled = false;
 
     const run = async () => {

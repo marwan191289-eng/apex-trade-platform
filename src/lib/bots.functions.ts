@@ -46,7 +46,7 @@ export const createBot = createServerFn({ method: "POST" })
       investment_usdt: data.investment_usdt,
       config,
     });
-    if (error) throw new Error(error.message);
+    if (error) { console.error("[bots]", error.message); throw new Error("Operation failed. Please try again."); }
     return { success: true };
   });
 

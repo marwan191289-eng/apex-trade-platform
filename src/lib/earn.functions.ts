@@ -41,7 +41,7 @@ export const stake = createServerFn({ method: "POST" })
       product_id: data.product_id,
       amount: data.amount_usdt,
     });
-    if (error) throw new Error(error.message);
+    if (error) { console.error("[earn]", error.message); throw new Error("Operation failed. Please try again."); }
     return { success: true };
   });
 

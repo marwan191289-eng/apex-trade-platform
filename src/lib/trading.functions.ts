@@ -22,7 +22,7 @@ export const executeTrade = createServerFn({ method: "POST" })
       .select("balance_usdt")
       .eq("user_id", userId)
       .maybeSingle();
-    if (wErr) throw new Error(wErr.message);
+    if (wErr) { console.error("[trading] wallet fetch", wErr.message); throw new Error("Operation failed. Please try again."); }
     if (!wallet) throw new Error("Wallet not found");
 
     const balance = Number(wallet.balance_usdt);
@@ -35,7 +35,7 @@ export const executeTrade = createServerFn({ method: "POST" })
         .from("wallets")
         .update({ balance_usdt: balance - total, updated_at: new Date().toISOString() })
         .eq("user_id", userId);
-      if (uErr) throw new Error(uErr.message);
+      if (uErr) { console.error("[trading] wallet update", uErr.message); throw new Error("Operation failed. Please try again."); }
 
       // Upsert holding
       const { data: existing } = await supabase
@@ -101,7 +101,7 @@ export const executeTrade = createServerFn({ method: "POST" })
       total_usdt: total,
       status: "filled",
     });
-    if (oErr) throw new Error(oErr.message);
+    if (oErr) { console.error("[trading] order insert", oErr.message); throw new Error("Operation failed. Please try again."); }
 
     return { success: true, symbol: data.symbol, side: data.side, total };
   });
