@@ -23,7 +23,7 @@ export function PricePrediction({ symbol, changePct24h = 0 }: Props) {
   const [updatedAt, setUpdatedAt] = useState<number | null>(null);
 
   useEffect(() => {
-    if (!indicators || !price) return;
+    if (!indicators || !price || !user) return;
     let cancelled = false;
 
     const run = async () => {
