@@ -14,16 +14,20 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "TradeXray — Professional Crypto Trading Platform" },
-      { name: "description", content: "Trade Bitcoin, Ethereum and 200+ cryptocurrencies with live market data, deep liquidity, and a $10,000 virtual portfolio." },
+      { name: "description", content: "Trade Bitcoin, Ethereum and 500+ cryptocurrencies with live markets, advanced charts and a $10,000 virtual portfolio." },
       { property: "og:title", content: "TradeXray — Professional Crypto Trading" },
-      { property: "og:description", content: "Live markets. Advanced trading. Paper-trade with $10,000 virtual USDT." },
+      { property: "og:description", content: "Live markets, futures, bots and copy trading. Paper-trade with $10,000 virtual USDT." },
+      { property: "og:image", content: "https://tradexray-v.lovable.app/og-image.jpg" },
+      { property: "og:url", content: "https://tradexray-v.lovable.app/" },
     ],
+    links: [{ rel: "canonical", href: "https://tradexray-v.lovable.app/" }],
   }),
   loader: ({ context }) => { context.queryClient.ensureQueryData(marketsQuery); },
   errorComponent: ({ error }) => <div className="p-8 text-danger">{error.message}</div>,
   notFoundComponent: () => <div className="p-8">Not found</div>,
   component: Index,
 });
+
 
 function Index() {
   return (

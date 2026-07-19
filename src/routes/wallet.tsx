@@ -11,9 +11,17 @@ import { useI18n } from "@/lib/i18n";
 import { useLivePrices } from "@/lib/live-prices";
 
 export const Route = createFileRoute("/wallet")({
-  head: () => ({ meta: [{ title: "Wallet — TradeXray" }] }),
+  head: () => ({ meta: [
+    { title: "Wallet — TradeXray" },
+    { name: "description", content: "Your TradeXray portfolio: real-time balance, holdings, allocation and P&L powered by live Binance data." },
+    { property: "og:title", content: "Your Portfolio — TradeXray Wallet" },
+    { property: "og:description", content: "Track holdings, allocation and live P&L across your paper-trading portfolio." },
+    { property: "og:url", content: "https://tradexray-v.lovable.app/wallet" },
+    { name: "robots", content: "noindex" },
+  ], links: [{ rel: "canonical", href: "https://tradexray-v.lovable.app/wallet" }] }),
   component: WalletPage,
 });
+
 
 function WalletPage() {
   const { user, loading } = useAuth();

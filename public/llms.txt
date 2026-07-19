@@ -1,0 +1,15 @@
+# TradeXray
+
+> Professional crypto trading platform with live markets for 500+ assets, advanced charts, futures, trading bots, copy trading and staking. Bilingual EN/AR. Paper-trading with a $10,000 virtual USDT portfolio.
+
+TradeXray provides real-time price data sourced from Binance, TradingView-powered charts, AI-assisted price prediction, and simulated order execution so users can learn and test strategies risk-free.
+
+## Pages
+
+- [Home](/): Overview of TradeXray, featured markets and platform capabilities.
+- [Markets](/markets): Live prices, top gainers/losers and volume leaders for 500+ cryptocurrencies.
+- [Spot Trade — BTC](/trade/BTC): Live chart, order book and trade panel for Bitcoin.
+- [Futures](/futures): Perpetual crypto futures with up to 125x leverage.
+- [Trading Bots](/bots): Automated Grid and DCA trading bots.
+- [Copy Trading](/copy): Follow verified pro traders and mirror their strategies.
+- [Earn](/earn): Stake crypto and earn passive yield.

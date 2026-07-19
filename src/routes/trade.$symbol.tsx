@@ -13,21 +13,47 @@ import { fmtPrice, fmtPct, fmtCompact } from "@/lib/format";
 import { useLivePrice } from "@/lib/live-prices";
 
 export const Route = createFileRoute("/trade/$symbol")({
-  head: ({ params }) => ({
-    meta: [
-      { title: `${params.symbol.toUpperCase()}/USDT — Trade — TradeXray` },
-      { name: "description", content: `Trade ${params.symbol.toUpperCase()} with live price chart, order book and instant execution.` },
-    ],
-  }),
+  head: ({ params, loaderData }) => {
+    const sym = params.symbol.toUpperCase();
+    const canonical = `https://tradexray-v.lovable.app/trade/${sym}`;
+    const price = loaderData?.price;
+    const name = loaderData?.name ?? sym;
+    return {
+      meta: [
+        { title: `${sym}/USDT — Trade ${name} — TradeXray` },
+        { name: "description", content: `Trade ${name} (${sym}/USDT) with live price chart, order book and instant execution on TradeXray.` },
+        { property: "og:title", content: `${sym}/USDT — Trade ${name} on TradeXray` },
+        { property: "og:description", content: `Live ${name} price, advanced chart and order book. Trade ${sym}/USDT with $10,000 virtual USDT.` },
+        { property: "og:type", content: "product" },
+        { property: "og:url", content: canonical },
+        { property: "og:image", content: "https://tradexray-v.lovable.app/og-image.jpg" },
+      ],
+      links: [{ rel: "canonical", href: canonical }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Product",
+            name: `${name} (${sym}/USDT)`,
+            description: `Trade ${name} on TradeXray with live charts and order book.`,
+            ...(price ? { offers: { "@type": "Offer", price: price, priceCurrency: "USDT", availability: "https://schema.org/InStock", url: canonical } } : {}),
+          }),
+        },
+      ],
+    };
+  },
   loader: async ({ context, params }) => {
     const coins = await context.queryClient.ensureQueryData(marketsQuery);
     const id = symbolToId(params.symbol, coins);
-    context.queryClient.ensureQueryData(coinDetailQuery(id));
+    const coin = await context.queryClient.ensureQueryData(coinDetailQuery(id));
+    return { name: coin?.name ?? params.symbol.toUpperCase(), price: coin?.current_price ?? null };
   },
   errorComponent: ({ error }) => <div className="p-8 text-danger">{error.message}</div>,
   notFoundComponent: () => <div className="p-8">Not found</div>,
   component: TradePage,
 });
+
 
 
 function TradePage() {
@@ -66,10 +92,11 @@ function Content() {
         <div className="flex items-center gap-3">
           <img src={coin.image} alt="" width={36} height={36} className="rounded-full" />
           <div>
-            <div className="text-lg font-bold">{sym}/USDT</div>
+            <h1 className="text-lg font-bold">{sym}/USDT</h1>
             <div className="text-xs text-muted-foreground">{coin.name}</div>
           </div>
         </div>
+
         <div>
           <div className={`text-2xl font-bold font-mono ${up ? "text-success" : "text-danger"}`}>${fmtPrice(price)}</div>
           <div className={`text-xs font-mono ${up ? "text-success" : "text-danger"}`}>{fmtPct(changePct)} (24h){live ? " • LIVE" : ""}</div>

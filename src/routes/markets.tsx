@@ -14,17 +14,21 @@ import { Link } from "@tanstack/react-router";
 export const Route = createFileRoute("/markets")({
   head: () => ({
     meta: [
-      { title: "Markets — TradeXray" },
-      { name: "description", content: "Live cryptocurrency prices, top gainers, losers and volume leaders powered by Binance." },
+      { title: "Crypto Markets — Live Prices — TradeXray" },
+      { name: "description", content: "Live cryptocurrency prices, top gainers, losers and volume leaders for 500+ assets powered by Binance." },
       { property: "og:title", content: "Crypto Markets — TradeXray" },
       { property: "og:description", content: "Real-time prices for Bitcoin, Ethereum, Solana and 500+ assets." },
+      { property: "og:image", content: "https://tradexray-v.lovable.app/og-image.jpg" },
+      { property: "og:url", content: "https://tradexray-v.lovable.app/markets" },
     ],
+    links: [{ rel: "canonical", href: "https://tradexray-v.lovable.app/markets" }],
   }),
   loader: ({ context }) => { context.queryClient.ensureQueryData(marketsQuery); },
   errorComponent: ({ error }) => <div className="p-8 text-danger">{error.message}</div>,
   notFoundComponent: () => <div className="p-8">Not found</div>,
   component: MarketsPage,
 });
+
 
 function MarketsPage() {
   return (

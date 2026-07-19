@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-const BASE_URL = "https://trade-nexus-elite.lovable.app";
+const BASE_URL = "https://tradexray-v.lovable.app";
 
 const entries = [
   { path: "/", changefreq: "daily", priority: "1.0" },
@@ -10,6 +10,7 @@ const entries = [
   { path: "/bots", changefreq: "weekly", priority: "0.7" },
   { path: "/copy", changefreq: "weekly", priority: "0.7" },
   { path: "/earn", changefreq: "weekly", priority: "0.7" },
+  { path: "/wallet", changefreq: "daily", priority: "0.6" },
   { path: "/login", changefreq: "monthly", priority: "0.5" },
   { path: "/signup", changefreq: "monthly", priority: "0.5" },
 ];

@@ -3,4 +3,4 @@ Allow: /
 Disallow: /wallet
 Disallow: /api/
 
-Sitemap: https://trade-nexus-elite.lovable.app/sitemap.xml
+Sitemap: https://tradexray-v.lovable.app/sitemap.xml
