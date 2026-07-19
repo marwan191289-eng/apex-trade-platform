@@ -13,11 +13,19 @@ import { useLivePrice } from "@/lib/live-prices";
 const botsQuery = queryOptions({ queryKey: ["bots"], queryFn: () => listBots(), staleTime: 10_000 });
 
 export const Route = createFileRoute("/bots")({
-  head: () => ({ meta: [{ title: "Trading Bots — TradeXray" }, { name: "description", content: "Automated Grid and DCA trading bots with live Binance data." }] }),
+  head: () => ({ meta: [
+    { title: "Trading Bots — TradeXray" },
+    { name: "description", content: "Automate crypto strategies with Grid and DCA trading bots powered by live Binance data." },
+    { property: "og:title", content: "Automated Trading Bots — TradeXray" },
+    { property: "og:description", content: "Deploy Grid and DCA bots to trade 24/7 with live market data." },
+    { property: "og:image", content: "https://tradexray-v.lovable.app/og-image.jpg" },
+    { property: "og:url", content: "https://tradexray-v.lovable.app/bots" },
+  ], links: [{ rel: "canonical", href: "https://tradexray-v.lovable.app/bots" }] }),
   errorComponent: ({ error }) => <div className="p-8 text-danger">{error.message}</div>,
   notFoundComponent: () => <div className="p-8">Not found</div>,
   component: BotsPage,
 });
+
 
 function BotsPage() {
   return (

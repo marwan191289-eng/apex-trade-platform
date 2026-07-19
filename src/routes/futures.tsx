@@ -23,7 +23,15 @@ const positionsQuery = queryOptions({
 
 export const Route = createFileRoute("/futures")({
   ssr: false,
-  head: () => ({ meta: [{ title: "Futures — TradeXray" }, { name: "description", content: "Trade perpetual crypto futures with up to 125x leverage." }] }),
+  head: () => ({ meta: [
+    { title: "Futures — TradeXray" },
+    { name: "description", content: "Trade perpetual crypto futures with up to 125x leverage on Bitcoin, Ethereum and more." },
+    { property: "og:title", content: "Perpetual Futures — TradeXray" },
+    { property: "og:description", content: "Open leveraged long/short positions with up to 125x on any major asset." },
+    { property: "og:image", content: "https://tradexray-v.lovable.app/og-image.jpg" },
+    { property: "og:url", content: "https://tradexray-v.lovable.app/futures" },
+  ], links: [{ rel: "canonical", href: "https://tradexray-v.lovable.app/futures" }] }),
+
   errorComponent: ({ error }) => <div className="p-8 text-danger">{error.message}</div>,
   notFoundComponent: () => <div className="p-8">Not found</div>,
   component: FuturesPage,
@@ -58,11 +66,15 @@ function Content() {
           <p className="text-muted-foreground text-sm">Open leveraged long/short positions on any major asset. Up to 125x.</p>
         </div>
         <div className="flex items-center gap-3">
+          <label htmlFor="futures-symbol" className="sr-only">Select trading pair</label>
           <select
+            id="futures-symbol"
+            aria-label="Select trading pair"
             value={symbol}
             onChange={(e) => setSymbol(e.target.value)}
             className="bg-bg-card border border-white/10 rounded p-2 text-sm font-mono"
           >
+
             {coins.slice(0, 50).map((c) => (
               <option key={c.id} value={c.symbol.toUpperCase()}>{c.symbol.toUpperCase()}/USDT-PERP</option>
             ))}

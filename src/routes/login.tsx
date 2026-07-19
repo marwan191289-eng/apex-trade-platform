@@ -8,9 +8,16 @@ import { SocialAuthButtons } from "@/components/SocialAuthButtons";
 
 
 export const Route = createFileRoute("/login")({
-  head: () => ({ meta: [{ title: "Sign In — TradeXray" }] }),
+  head: () => ({ meta: [
+    { title: "Sign In — TradeXray" },
+    { name: "description", content: "Sign in to TradeXray to access your paper-trading portfolio, live markets, futures, bots and copy trading." },
+    { property: "og:title", content: "Sign In — TradeXray" },
+    { property: "og:description", content: "Access your TradeXray account and continue trading with $10,000 virtual USDT." },
+    { property: "og:url", content: "https://tradexray-v.lovable.app/login" },
+  ], links: [{ rel: "canonical", href: "https://tradexray-v.lovable.app/login" }] }),
   component: LoginPage,
 });
+
 
 function LoginPage() {
   const { t } = useI18n();

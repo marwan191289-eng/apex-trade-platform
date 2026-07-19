@@ -11,11 +11,19 @@ const productsQuery = queryOptions({ queryKey: ["staking-products"], queryFn: ()
 const stakesQuery = queryOptions({ queryKey: ["my-stakes"], queryFn: () => listMyStakes(), staleTime: 10_000 });
 
 export const Route = createFileRoute("/earn")({
-  head: () => ({ meta: [{ title: "Earn — TradeXray" }, { name: "description", content: "Stake crypto and earn passive yield up to 12% APY." }] }),
+  head: () => ({ meta: [
+    { title: "Earn — Crypto Staking & Yield — TradeXray" },
+    { name: "description", content: "Stake crypto on TradeXray and earn passive yield up to 12% APY with flexible and locked savings products." },
+    { property: "og:title", content: "Earn Passive Yield on Crypto — TradeXray" },
+    { property: "og:description", content: "Flexible and locked staking products with APY up to 12%. Put idle assets to work." },
+    { property: "og:image", content: "https://tradexray-v.lovable.app/og-image.jpg" },
+    { property: "og:url", content: "https://tradexray-v.lovable.app/earn" },
+  ], links: [{ rel: "canonical", href: "https://tradexray-v.lovable.app/earn" }] }),
   errorComponent: ({ error }) => <div className="p-8 text-danger">{error.message}</div>,
   notFoundComponent: () => <div className="p-8">Not found</div>,
   component: EarnPage,
 });
+
 
 function EarnPage() {
   return (

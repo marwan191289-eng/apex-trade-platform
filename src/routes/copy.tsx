@@ -12,11 +12,19 @@ const leadersQuery = queryOptions({ queryKey: ["copy-leaders"], queryFn: () => l
 const followsQuery = queryOptions({ queryKey: ["copy-follows"], queryFn: () => listMyFollows(), staleTime: 5_000 });
 
 export const Route = createFileRoute("/copy")({
-  head: () => ({ meta: [{ title: "Copy Trading — TradeXray" }, { name: "description", content: "Follow verified pro traders. Mirror their trades automatically." }] }),
+  head: () => ({ meta: [
+    { title: "Copy Trading — TradeXray" },
+    { name: "description", content: "Follow verified pro crypto traders and mirror their trades automatically with copy trading on TradeXray." },
+    { property: "og:title", content: "Copy Trading — Mirror Pro Traders on TradeXray" },
+    { property: "og:description", content: "Browse leaderboards, ROI and win-rates. Follow top traders and auto-copy their positions." },
+    { property: "og:image", content: "https://tradexray-v.lovable.app/og-image.jpg" },
+    { property: "og:url", content: "https://tradexray-v.lovable.app/copy" },
+  ], links: [{ rel: "canonical", href: "https://tradexray-v.lovable.app/copy" }] }),
   errorComponent: ({ error }) => <div className="p-8 text-danger">{error.message}</div>,
   notFoundComponent: () => <div className="p-8">Not found</div>,
   component: CopyPage,
 });
+
 
 function CopyPage() {
   return (
