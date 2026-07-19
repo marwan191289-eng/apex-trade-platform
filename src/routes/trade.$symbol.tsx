@@ -16,8 +16,10 @@ export const Route = createFileRoute("/trade/$symbol")({
   head: ({ params, loaderData }) => {
     const sym = params.symbol.toUpperCase();
     const canonical = `https://tradexray-v.lovable.app/trade/${sym}`;
-    const price = loaderData?.price;
-    const name = loaderData?.name ?? sym;
+    const ld = loaderData as { name?: string; price?: number | null } | undefined;
+    const price = ld?.price;
+    const name = ld?.name ?? sym;
+
     return {
       meta: [
         { title: `${sym}/USDT — Trade ${name} — TradeXray` },
