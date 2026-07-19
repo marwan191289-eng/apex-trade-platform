@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Suspense, useMemo, useState } from "react";
-import { useSuspenseQuery, useQueryClient } from "@tanstack/react-query";
+import { useSuspenseQuery, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "@/lib/auth-context";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { Header } from "@/components/Header";
@@ -149,7 +150,13 @@ function Row({ label, value, cls = "" }: { label: string; value: string; cls?: s
 }
 
 function PositionsList({ currentPrices }: { currentPrices: Array<{ symbol: string; current_price: number }> }) {
-  const { data: positions } = useSuspenseQuery(positionsQuery);
+  const { user } = useAuth();
+  const { data: positions = [] } = useQuery({
+    queryKey: ["futures-positions"],
+    queryFn: () => listFuturesPositions(),
+    staleTime: 5_000,
+    enabled: !!user,
+  });
   const close = useServerFn(closeFuturesPosition);
   const qc = useQueryClient();
   const livePrices = useLivePrices();
