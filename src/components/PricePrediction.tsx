@@ -5,6 +5,7 @@ import { useIndicators } from "@/lib/indicators";
 import { useLivePrice } from "@/lib/live-prices";
 import { getPricePrediction, type Prediction } from "@/lib/predictions.functions";
 import { fmtPrice, fmtPct } from "@/lib/format";
+import { useAuth } from "@/lib/auth-context";
 
 interface Props {
   symbol: string; // e.g. "BTC"
