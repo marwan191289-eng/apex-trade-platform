@@ -150,7 +150,13 @@ function Row({ label, value, cls = "" }: { label: string; value: string; cls?: s
 }
 
 function PositionsList({ currentPrices }: { currentPrices: Array<{ symbol: string; current_price: number }> }) {
-  const { data: positions } = useSuspenseQuery(positionsQuery);
+  const { user } = useAuth();
+  const { data: positions = [] } = useQuery({
+    queryKey: ["futures-positions"],
+    queryFn: () => listFuturesPositions(),
+    staleTime: 5_000,
+    enabled: !!user,
+  });
   const close = useServerFn(closeFuturesPosition);
   const qc = useQueryClient();
   const livePrices = useLivePrices();
