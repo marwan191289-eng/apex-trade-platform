@@ -30,6 +30,7 @@ export interface Prediction {
 }
 
 export const getPricePrediction = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((i: unknown) => Input.parse(i))
   .handler(async ({ data }): Promise<Prediction> => {
     const apiKey = process.env.LOVABLE_API_KEY;
