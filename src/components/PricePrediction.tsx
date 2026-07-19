@@ -12,7 +12,8 @@ interface Props {
   changePct24h?: number;
 }
 
-const { user } = useAuth();
+export function PricePrediction({ symbol, changePct24h = 0 }: Props) {
+  const { user } = useAuth();
   const { indicators } = useIndicators(symbol, "1m");
   const live = useLivePrice(symbol);
   const price = live?.price;
